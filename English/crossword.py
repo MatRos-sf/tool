@@ -38,7 +38,7 @@ class Vocabulary:
     def parse(cls, data: list):
         assert all(isinstance(x, str) for x in data)
         # remove emtpy space
-        data = [x.strip() for x in data]
+        data = [x.strip().replace("*", "") for x in data]
         return cls(*data)
 
 def import_voc_from_file_to_list():
