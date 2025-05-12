@@ -26,11 +26,14 @@ class Vocabulary:
         return "{} ({}) {} | {}".format(english, self.part_of_speach, self.definition, self.sentence_with_gap)
 
     @classmethod
-    def parse(cls, data: list):
+    def parse(cls, data: list) -> "Vocabulary":
         assert all(isinstance(x, str) for x in data)
         # remove emtpy space
         data = [x.strip().replace("*", "") for x in data]
         return cls(*data)
+
+    def __str__(self):
+        return f"{self.english} → {self.polish}"
 
 def import_voc_from_file_to_list(path: Union[str, Path]) -> List[Vocabulary]:
     """
@@ -43,7 +46,6 @@ def import_voc_from_file_to_list(path: Union[str, Path]) -> List[Vocabulary]:
     raw = list(filter(lambda x: x != ';', raw))
     assert len(raw) % 7 == 0, "The table should have 7 columns"
     start = 0
-    for end in range(0, len(raw), 7):
-        list_of_vocabularies.append(Vocabulary.parse(raw[start:end+7]))
-        start = end + 7
+    for i in range(0, len(raw), 7):
+        list_of_vocabularies.append(Vocabulary.parse(raw[i:i+7]))
     return list_of_vocabularies

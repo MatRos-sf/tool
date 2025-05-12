@@ -3,7 +3,7 @@ from random import shuffle
 
 from English.vocabulary import import_voc_from_file_to_list
 from English.crossword import save_voc_to_file
-from English.choice_section import chose_choice_words, save_choice_words
+from English.choice_section import choose_choice_words, save_choice_words
 
 DIR_BASE_SAVE = Path(__file__).parent.parent / "files" / "english"
 IMPORT_VOCABULARIES_PATH = DIR_BASE_SAVE / "raw_vocabularies"
@@ -19,7 +19,7 @@ if __name__ == "__main__":
     save_voc_to_file(PAYLOAD_TO_CROSSWORD_PATH, list_of_vocabularies)
     print("Vocabularies have been saved")
     print("Creating choices")
-    choices = chose_choice_words(list_of_vocabularies)
+    choices = choose_choice_words(list_of_vocabularies)
     print("Saving choices")
     save_choice_words(choices, CHOICES_PATH)
     print("Choices have been saved")

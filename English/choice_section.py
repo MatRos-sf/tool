@@ -1,16 +1,22 @@
+"""
+This module provides utility functions for generating vocabulary revision choices.
+Example use case: generating randomized vocabulary exercises for practice.
+"""
+
 from enum import IntEnum
 from typing import List
 from random import shuffle, randint
 from string import ascii_lowercase, ascii_uppercase
 from pathlib import Path
 
+from vocabulary import Vocabulary
 
 class SuffixEnum(IntEnum):
     ALPHABET_LOWER = 1
     NUMBER = 2
     ALPHABET_UPPER = 3
 
-def choice_words(list_of_voc: List["Vocabulary"], labels: List[str]):
+def shuffle_words_by_labels(list_of_voc: List[Vocabulary], labels: List[str]):
     """
     Shuffles the list of vocabulary objects and creates a new list of lists of mixed words.
     """
@@ -21,7 +27,7 @@ def choice_words(list_of_voc: List["Vocabulary"], labels: List[str]):
         mixed.append(helper_list)
     return mixed
 
-def set_suffix(suffix: SuffixEnum, position: int):
+def generate_suffix(suffix: SuffixEnum, position: int):
     match suffix:
         case SuffixEnum.ALPHABET_LOWER:
             return ascii_lowercase[position]
@@ -32,21 +38,21 @@ def set_suffix(suffix: SuffixEnum, position: int):
         case _:
             raise NotImplementedError(f"Case not implemented {suffix}")
 
-def chose_choice_words(list_of_voc: List["Vocabulary"])-> List[List[str]]:
+def choose_choice_words(list_of_voc: List["Vocabulary"])-> List[List[str]]:
     rand = randint(1,2)
     match rand:
         case 1:
-            return choice_words(list_of_voc, ["english", "definition", "polish"])
+            return shuffle_words_by_labels(list_of_voc, ["english", "definition", "polish"])
         case 2:
-            return choice_words(list_of_voc, ["english", "sentence_with_gap"])
+            return shuffle_words_by_labels(list_of_voc, ["english", "sentence_with_gap"])
         case _:
             raise NotImplementedError(f"Case not implemented {rand}")
 
 
 def save_choice_words(list_of_choices: List[List[str]], path_name: Path| str ):
     with open(path_name, "w", encoding="utf-8") as file:
-        for idx_suffix, words in enumerate(list_of_choices):
+        for words, suffix_type in zip(list_of_choices, SuffixEnum):
             for idx, word in enumerate(words):
-                payload = set_suffix(SuffixEnum(idx_suffix+1), idx) + ". " + word
+                payload = generate_suffix(suffix_type, idx) + ". " + word
                 file.write(payload + "\n")
             file.write("\n" + '*'*50 + "\n")
