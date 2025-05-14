@@ -45,7 +45,6 @@ def import_voc_from_file_to_list(path: Union[str, Path]) -> List[Vocabulary]:
     raw = raw.replace("\n", ";").split("|")[1:-1]
     raw = list(filter(lambda x: x != ';', raw))
     assert len(raw) % 7 == 0, "The table should have 7 columns"
-    start = 0
     for i in range(0, len(raw), 7):
         list_of_vocabularies.append(Vocabulary.parse(raw[i:i+7]))
     return list_of_vocabularies
