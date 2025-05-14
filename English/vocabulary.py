@@ -46,5 +46,8 @@ def import_voc_from_file_to_list(path: Union[str, Path]) -> List[Vocabulary]:
     raw = list(filter(lambda x: x != ';', raw))
     assert len(raw) % 7 == 0, "The table should have 7 columns"
     for i in range(0, len(raw), 7):
+        # First and Second column scip
+        if i  in (0,7):
+            continue
         list_of_vocabularies.append(Vocabulary.parse(raw[i:i+7]))
     return list_of_vocabularies
