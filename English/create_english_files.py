@@ -4,11 +4,13 @@ from random import shuffle
 from English.vocabulary import import_voc_from_file_to_list
 from English.crossword import save_voc_to_file
 from English.choice_section import choose_choice_words, save_choice_words
+from English.anki.anki import create_anki_csv
 
 DIR_BASE_SAVE = Path(__file__).parent.parent / "files" / "english"
 IMPORT_VOCABULARIES_PATH = DIR_BASE_SAVE / "raw_vocabularies"
 PAYLOAD_TO_CROSSWORD_PATH = DIR_BASE_SAVE/ "payload_to_crossword"
 CHOICES_PATH = DIR_BASE_SAVE / "choices"
+ANKI_PATH = DIR_BASE_SAVE / "anki.csv"
 
 if __name__ == "__main__":
     print("Importing vocabularies")
@@ -23,3 +25,6 @@ if __name__ == "__main__":
     print("Saving choices")
     save_choice_words(choices, CHOICES_PATH)
     print("Choices have been saved")
+    print("Creating anki csv")
+    create_anki_csv(ANKI_PATH, list_of_vocabularies)
+    print("Anki csv has been created")
