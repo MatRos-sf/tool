@@ -8,7 +8,7 @@ from English.anki.field import Extend
 
 def create_anki_csv(path: Path, list_of_vocabularies: List[Vocabulary]):
     with open(path, "w", encoding="utf-8") as file:
-        writer = csv.writer(file)
+        writer = csv.writer(file, delimiter=";")
         for voc in list_of_vocabularies:
             row = []
             for field in Extend:
