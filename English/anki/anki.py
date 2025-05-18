@@ -1,21 +1,13 @@
+__all_ = ["create_anki_csv"]
 import csv
 from typing import List
 from pathlib import Path
-from datetime import datetime
 
 from English.vocabulary import Vocabulary
-from English.anki.field import Extend
+from .field import AnkiField
 
-def create_anki_csv(path: Path, list_of_vocabularies: List[Vocabulary]):
+def create_anki_csv(path: Path, list_of_vocabularies: List[Vocabulary], cls_field: AnkiField):
     with open(path, "w", encoding="utf-8") as file:
         writer = csv.writer(file, delimiter=";")
-        for voc in list_of_vocabularies:
-            row = []
-            for field in Extend:
-                if hasattr(voc, field):
-                    row.append(getattr(voc, field))
-                if field == Extend.TAG:
-                    row.append(datetime.strftime(datetime.now(), "%b").lower())
-                else:
-                    row.append("")
+        for row in cls_field.create_anki(list_of_vocabularies):
             writer.writerow(row)
