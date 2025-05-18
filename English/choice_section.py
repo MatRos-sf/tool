@@ -9,7 +9,7 @@ from random import shuffle, randint
 from string import ascii_lowercase, ascii_uppercase
 from pathlib import Path
 
-from vocabulary import Vocabulary
+from .vocabulary import Vocabulary
 
 class SuffixEnum(IntEnum):
     ALPHABET_LOWER = 1
