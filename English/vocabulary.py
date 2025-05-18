@@ -6,7 +6,7 @@ from pathlib import Path
 class Vocabulary:
     english: str
     phonetic: str
-    part_of_speach: str
+    part_of_speech: str
     definition: str
     polish: str
     sentence: str
@@ -23,7 +23,7 @@ class Vocabulary:
         :return: str
         """
         english = self.english.replace(" ", "_")
-        return "{} ({}) {} | {}".format(english, self.part_of_speach, self.definition, self.sentence_with_gap)
+        return "{} ({}) {} | {}".format(english, self.part_of_speech, self.definition, self.sentence_with_gap)
 
     @classmethod
     def parse(cls, data: list) -> "Vocabulary":
