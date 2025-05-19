@@ -38,7 +38,7 @@ parser.add_argument(
     '--type_anki_field',
     help = "Type of anki field. Anki field are implemented in anki/filed directory with ANKI_FIELD variables."
            "If you want create new one please implemented it in ANKI_FIELD dictionary. ",
-    default = "Extend"
+    default = "extend"
 )
 
 args = parser.parse_args()
@@ -48,7 +48,7 @@ print("Shuffling vocabularies")
 shuffle(list_of_vocabularies)
 
 # GUARD
-if args.type_anki_field != "Extend":
+if args.type_anki_field != "extend":
     if 3 not in args.tag:
         warnings.warn("You can't use --type_anki_field without --tag 3, so --type_anki_field will be ignored")
     elif not ANKI_FIELDS.get(args.type_anki_field.title()):

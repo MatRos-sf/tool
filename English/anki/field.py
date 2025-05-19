@@ -5,7 +5,7 @@ from datetime import datetime
 
 class AnkiField(Protocol):
     @classmethod
-    def create_anki(cls, list_of_vocabularies: list):
+    def row_generate(cls, list_of_vocabularies: list):
         ...
 
 
