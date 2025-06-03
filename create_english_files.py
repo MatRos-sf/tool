@@ -47,7 +47,7 @@ parser.add_argument(
 parser.add_argument(
     "--mix",
     action="store_true",
-    help="If set, vocabularies will be suffled before processing",
+    help="If set, vocabularies will be shuffled before processing",
 )
 
 args = parser.parse_args()
