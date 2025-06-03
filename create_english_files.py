@@ -9,6 +9,7 @@ from English.vocabulary import import_voc_from_file_to_list
 from English.crossword import save_voc_to_file
 from English.choice_section import choose_choice_words, save_choice_words
 from English.anki import create_anki_csv, ANKI_FIELDS
+from English.browser import open_browser_with_vocabularies
 
 
 
@@ -80,3 +81,8 @@ for tag in args.tag:
         print("Creating anki csv")
         create_anki_csv(filepath, list_of_vocabularies, field)
         print("Anki csv has been created in the path: ", filepath.resolve())
+
+    if tag == 4:
+        print("Opening browser")
+        open_browser_with_vocabularies(list_of_vocabularies)
+        print("Browser has been opened")
