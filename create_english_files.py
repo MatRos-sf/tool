@@ -1,5 +1,7 @@
 import argparse
+import asyncio
 import os
+import sys
 import warnings
 from pathlib import Path
 from random import shuffle
@@ -7,6 +9,7 @@ from typing import List
 
 from English.anki import ANKI_FIELDS, create_anki_csv
 from English.browser import open_browser_with_vocabularies
+from English.browser.oxford_tool import check_phonetic
 from English.choice_section import choose_choice_words, save_choice_words
 from English.crossword import save_voc_to_file
 from English.vocabulary import import_voc_from_file_to_list
@@ -49,12 +52,45 @@ parser.add_argument(
     action="store_true",
     help="If set, vocabularies will be shuffled before processing",
 )
+parser.add_argument(
+    "--check_phonetic",
+    action="store_true",
+    help="If set, uk phonetic will be checked for path_raw. If you use this commend only phonetic will be checked rest will be skipped.",
+)
 
 args = parser.parse_args()
 print("Importing vocabularies")
 list_of_vocabularies = import_voc_from_file_to_list(
     Path(args.path_raw) / Path("raw_vocabularies")
 )
+
+if args.check_phonetic:
+    # TODO: it's should be better solution. Right now it's temporary
+    list_of_vocabularies = import_voc_from_file_to_list(
+        Path(args.path_raw) / Path("raw_vocabularies")
+    )
+
+    with open(
+        Path(args.path_raw) / Path("raw_vocabularies"), "r", encoding="utf-8"
+    ) as file:
+        raw_text = file.read()
+        print("Checking phonetic")
+
+    difference = asyncio.run(check_phonetic(list_of_vocabularies))
+    print(difference)
+    if difference:
+        print("There are phonetic difference:")
+        for old_phonetic, new_phonetic in difference:
+            print("\t", old_phonetic, new_phonetic)
+            raw_text = raw_text.replace(old_phonetic, new_phonetic)
+        print("Saving new phonetics")
+        with open(
+            Path(args.path_raw) / Path("raw_vocabularies"), "w", encoding="utf-8"
+        ) as file:
+            file.write(raw_text)
+
+    sys.exit(1)
+
 
 if args.mix:
     print("Shuffling vocabularies")
