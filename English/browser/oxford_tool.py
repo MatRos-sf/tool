@@ -13,7 +13,7 @@ HEADERS = {
 }
 
 
-def create_query_string_for_oxford(key: str):
+def create_oxford_url(key: str):
     return OXFORD_URL.format(key.replace(" ", "-"), key.replace(" ", "+"))
 
 
@@ -27,7 +27,7 @@ async def capture_phonetic_from_oxford(word: Vocabulary) -> str:
     Raises:
         Exception: If phonetic is not found or status code is not 200
     """
-    url = create_query_string_for_oxford(word.english)
+    url = create_oxford_url(word.english)
 
     async with httpx.AsyncClient() as client:
         response = await client.get(url, headers=HEADERS, timeout=10)
