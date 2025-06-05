@@ -53,6 +53,6 @@ async def check_phonetic(words: list[Vocabulary]) -> List[tuple[str, str]]:
     tasks = [capture_phonetic_from_oxford(word) for word in words]
     result = await asyncio.gather(*tasks, return_exceptions=True)
     for word, phonetic in zip(words, result):
-        if word.phonetic != phonetic:
+        if word.phonetic != phonetic and not isinstance(phonetic, Exception):
             phonetic_difference.append((word.phonetic, phonetic))
     return phonetic_difference
