@@ -66,9 +66,6 @@ list_of_vocabularies = import_voc_from_file_to_list(
 
 if args.check_phonetic:
     # TODO: it's should be better solution. Right now it's temporary
-    list_of_vocabularies = import_voc_from_file_to_list(
-        Path(args.path_raw) / Path("raw_vocabularies")
-    )
 
     with open(
         Path(args.path_raw) / Path("raw_vocabularies"), "r", encoding="utf-8"
@@ -89,7 +86,7 @@ if args.check_phonetic:
         ) as file:
             file.write(raw_text)
 
-    sys.exit(1)
+    sys.exit(0)
 
 
 if args.mix:
