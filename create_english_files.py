@@ -3,6 +3,7 @@ import asyncio
 import os
 import sys
 import warnings
+from enum import StrEnum
 from pathlib import Path
 from random import shuffle
 from typing import List
@@ -22,6 +23,36 @@ def command_separated_list(value) -> List[int]:
         raise argparse.ArgumentTypeError("List of integers expected")
 
 
+class BackupEnum(StrEnum):
+    OVERWRITE = "overwrite"
+    APPEND = "append"
+
+
+class BackUpAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        values = values.split(";")
+        if len(values) > 2:
+            raise argparse.ArgumentError(
+                self, f"Invalid value: {values}. It must be 'file_name;action'"
+            )
+        elif len(values) == 1:
+            backup_file_name = values[0]
+            action = BackupEnum.APPEND
+        else:
+            backup_file_name, action = values
+            try:
+                action = BackupEnum(action.lower())
+            except ValueError:
+                raise argparse.ArgumentError(
+                    self,
+                    f"Invalid action: {action}. It must be 'overwrite' or 'append'",
+                )
+
+        setattr(namespace, "backup_file_name", Path(backup_file_name))
+        setattr(namespace, "backup_action", action)
+        setattr(namespace, "do_backup", True)
+
+
 parser = argparse.ArgumentParser(
     description="Script to create English files for: crossword, choices and anki"
 )
@@ -37,8 +68,8 @@ parser.add_argument(
 parser.add_argument(
     "--tag",
     type=command_separated_list,
-    help="Comma-separated list of integers where 1 = crossword, 2 = choices, 3 = anki",
-    default=[1, 2, 3],
+    help="Comma-separated list of integers where 1 = crossword, 2 = choices, 3 = anki, 4 = browser",
+    default=[1, 2, 3, 4],
 )
 parser.add_argument(
     "--type_anki_field",
@@ -56,6 +87,13 @@ parser.add_argument(
     "--check_phonetic",
     action="store_true",
     help="If set, uk phonetic will be checked for path_raw. If you use this commend only phonetic will be checked rest will be skipped.",
+)
+
+parser.add_argument(
+    "--do_backup",
+    action=BackUpAction,
+    help="Do backup of vocabularies. Use 'file_name;action' where action is 'overwrite' or 'append'",
+    required=False,
 )
 
 args = parser.parse_args()
@@ -135,3 +173,16 @@ for tag in args.tag:
         print("Opening browser")
         open_browser_with_vocabularies(list_of_vocabularies)
         print("Browser has been opened")
+
+if args.do_backup:
+    with open(
+        Path(args.path_raw) / args.backup_file_name,
+        "a" if args.backup_action == BackupEnum.APPEND else "w",
+        encoding="utf-8",
+    ) as file:
+        for voc in list_of_vocabularies:
+            file.write(voc.backup_payload() + "\n")
+    print(
+        "Backup has been saved in the path: ",
+        Path(args.path_raw) / args.backup_file_name,
+    )
